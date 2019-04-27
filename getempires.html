@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Heroes of the Empires | Empires</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+		integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+		crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+		crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+		integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+	<link rel="stylesheet" href="./css/style.css">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+	<script>
+
+		//	HTTP GET
+		$(document).ready(function () {
+
+			getTutorials();
+
+			$("#newForm").toggle(false);
+			$("#updateForm").toggle(false);
+
+			$("#newTutBtn").on("click", function (e) {
+				$("#newForm").toggle();
+			});
+
+			function getTutorials() {
+				$('#tutorialsBody').html('');
+				$.ajax({
+					url: ' http://81.2.241.234:8080/species?start=0&count=10&orderfield=id&orderdirection=DESC',
+					method: 'get',
+					dataType: 'json',
+					data: {
+						test: 'test data'
+					},
+					success: function (data) {
+						$(data).each(function (i, hero) {
+							$('#tutorialsBody').append($("<tr>")
+								.append($("<td>").append(hero.id))
+								.append($("<td>").append(hero.name))
+								.append($("<td>").append(hero.description))
+								.append($("<td>").append(`
+                                        <button class="updateHeroBtn" data-tutid="`+ hero.id + `">Update</button>
+                                        <button class="deleteHeroBtn" data-tutid="`+ hero.id + `">Delete</button>
+										`)));
+						});
+						loadButtons();
+					}
+
+				});
+			}
+
+
+			function loadButtons() {
+				$(".updateHeroBtn").click(function (e) {
+					updateHero($($(this)[0]).data("tutid"));
+					e.preventDefault();
+					document.documentElement.scrollTop = 0
+				});
+
+				$(".deleteHeroBtn").click(function (e) {
+					deleteHero($($(this)[0]).data("tutid"));
+					//getTutorials(); --> ez frissíti az oldalt, ha nem frissítené most
+
+					e.preventDefault();
+				});
+
+			}
+
+
+			// New Hero
+			$("#submitTutorial").on("click", function (e) {
+				let data = {
+					//newID: $($("#newForm")[0].id).val(),
+					//id:  $($("#newForm")[0].id).val(),
+					name: $($("#newForm")[0].name).val(),
+					desc: $($("#newForm")[0].desc).val()
+				}
+				postTutorial(data);
+				$("#newForm").trigger("reset");
+				$("#newForm").toggle();
+				e.preventDefault();
+			});
+
+			function postTutorial(data) {
+				$.ajax({
+					url: 'http://81.2.241.234:8080/species/',
+					method: 'POST',
+					dataType: 'json',
+					data: data,
+					success: function (data) {
+						console.log(data);
+						getTutorials();
+					}
+				});
+			}
+			//New Hero - END
+
+
+			//Update Hero - Start
+
+			function putTutorial(id, data) {
+				$.ajax({
+					url: 'http://81.2.241.234:8080/species/' + id,
+					method: 'PUT',
+					dataType: 'json',
+					data: data,
+					success: function (data) {
+						console.log(data);
+						getTutorials();
+					}
+				});
+			}
+
+			function updateHero(id) {
+
+				$.ajax({
+					url: 'http://81.2.241.234:8080/species/' + id,
+					method: 'GET',
+					data: {
+						test: 'test data'
+					},
+					//dataType: 'json',
+					success: function (data) {
+
+						$($("#updateForm")[0].updateID).val(id);
+						$($("#updateForm")[0].updateName).val(data.name);
+						$($("#updateForm")[0].updateDesc).val(data.description);
+
+						$("#updateForm").show();
+
+					}
+
+				});
+			}
+
+			// UPDATE GOMB UTÁNI RÉSZ
+			$("#updateTutorial").on("click", function (e) {
+
+				let data = {
+					id: $($("#updateForm")[0].updateID).val(),
+					name: $($("#updateForm")[0].updateName).val(),
+					desc: $($("#updateForm")[0].updateDesc).val()
+
+				}
+				//alert(data.id);
+				putTutorial(data.id, data);
+				$("#updateForm").trigger("reset");
+				$("#updateForm").toggle();
+				e.preventDefault();
+			});
+
+			//Update Hero - END
+
+
+
+
+			function deleteHero(id) {
+				$.ajax({
+					url: 'http://81.2.241.234:8080/species/' + id,
+					method: 'DELETE',
+					success: function (data) {
+						console.log(data);
+						getTutorials();
+						alert("Deleted " + id + ". ID record!");
+					}
+				});
+			}
+
+		});
+
+	</script>
+</head>
+
+
+<body>
+	<style>
+		html,
+		body {
+			height: 100%;
+			margin: 0;
+			display: flex;
+			flex-direction: column;
+			color: black;
+			font-family: arial;
+
+		}
+	</style>
+	<div class="d-flex flex-column h-100">
+		<!-- Fejrész -->
+		<section class="d-flex f-grow0 justify-content-between align-items-center bg-dark">
+			<div>
+				<a href="index.html"><img class="logo" src="./img/iconweapon.jpg"></a>
+			</div>
+
+			<div>
+				<a class="btn text-light" href="forplayers.html">Játékosoknak</a>
+				<a class="btn text-light" href="fordevelopers.html">Fejlesztőknek</a>
+				<a class="btn text-light" href="aboutus.html">Rólunk</a>
+				<a class="btn text-light" href="contact.hmtl">Kapcsolat</a>
+			</div>
+
+			<div>
+				<a class="btn text-light" href="index.html">Főoldal</a>
+				<a class="btn text-light" href="login.html">Bejelentkezés/Regisztráció</a>
+			</div>
+		</section>
+
+
+		<!-- TÖRZS -->
+
+		<div class="container">
+
+			<button id="newTutBtn" class="btn btn-primary btn-block">New Hero</button></br></br>
+			<form id="newForm">
+				<div class="form-group row">
+					<label for="name" class="col-sm-2 col-form-label">Name</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="name" placeholder="New Hero name">
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<label for="desc" class="col-sm-2 col-form-label">Description</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="desc" placeholder="Description">
+					</div>
+				</div>
+
+
+				<button id="submitTutorial" type="submit" class="btn btn-primary">Add new hero</button>
+			</form>
+
+			<!-- UPDATE -->
+			<div id="updateFormDiv">
+				<form id="updateForm">
+					<div class="form-group row">
+						<div class="col-sm-10">
+							<input type="hidden" class="form-control" id="tutId">
+						</div>
+					</div>
+
+
+					<div class="form-group row">
+						<label for="updateID" class="col-sm-2 col-form-labe">ID</label>
+						<div class="col-sm-10">
+							<input type="number" name="updateID" readonly class="form-control" id="updateID"
+								placeholder="ID">
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label for="updateName" class="col-sm-2 col-form-labe">Name</label>
+						<div class="col-sm-10">
+							<input type="text" name="updateName" class="form-control" id="updateName"
+								placeholder="Name">
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label for="updateDesc" class="col-sm-2 col-form-labe">Description</label>
+						<div class="col-sm-10">
+							<input type="text" name="updateDesc" class="form-control" id="updateDesc"
+								placeholder="Description">
+						</div>
+					</div>
+
+					<button id="updateTutorial" type="submit" class="btn btn-primary">Update Tutorial</button>
+				</form>
+			</div>
+
+			<table id="tutorialsTable" class="table table-bordered table-hover">
+				<thead>
+					<th>ID</th>
+					<th>Name</th>
+					<th>Description</th>
+					<th>Controls</th>
+				</thead>
+				<tbody id="tutorialsBody"></tbody>
+			</table>
+		</div>
+
+
+		<!-- LÁB -->
+
+		<section  id="footr" class="d-flex f-grow-0 justify-content-center text-light bg-dark">
+			<p>© OE-HTML5 - 2018-<span id="year"></span>/II.
+				<a class="btn text-light " href="asz.html">ÁSZF</a>
+				<a class="btn  text-light" href="av.html">Adatvédelem</a>
+			</p>
+		</section>
+	</div>
+	<script>
+		var d = new Date();
+		var n = d.getFullYear();
+		document.getElementById("year").innerHTML = n;
+	</script>
+
+</body>
+
+</html>

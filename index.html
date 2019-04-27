@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="This is the best game ever">
+        <meta name="keywords" content="responsive, web design, game, heroes and the empires">
+        <meta name="author" content="FPHGKR - Molnár Zoltán">
+        <title>Heroes of the Empires | Welcome</title>
+        <link rel="stylesheet" href="./css/style.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    </head>
+    <body>
+       <div class="d-flex flex-column h-100">
+           <!-- Fejrész -->
+            <section class="d-flex f-grow0 justify-content-between align-items-center bg-dark">
+                <div>
+                   <a href="index.html"> <img class="logo"  src="./img/iconweapon.jpg"></a>
+                </div>
+                
+                <div>
+                    <a class="btn text-light" href="forplayers.html">Játékosoknak</a>
+                    <a class="btn text-light" href="fordevelopers.html">Fejlesztőknek</a>
+                    <a class="btn text-light" href="aboutus.html">Rólunk</a>
+                    <a class="btn text-light" href="contact.html">Kapcsolat</a>
+                </div>
+
+                <div>
+                    <a class="btn text-light" href="index.html">Főoldal</a>
+                    <a class="btn text-light" href="login.html">Bejelentkezés/Regisztráció</a>
+                </div>
+            </section>
+            <!-- Törzs -->
+            <section id="maincontent" class="d-flex f-grow-1 justify-content-center align-items-center flex-column">
+                    <h1>Heroes of the Empires</h1>
+                        <p>Épitkezős, harcolós stratégiai játék platform</p>
+                        <p>OE-AMK - <b>reszponzív</b> weboldal, <b>adminisztrációs</b> felülettel</p>
+                        <hr>
+                    <div>
+                        <button style="width:200px;" onclick="location.href='gameguide.html'" type="button" class="btn btn-danger">Játék menete</button>
+                    </div>
+                        <hr>
+                    <div>
+                        <button  style="width:150px;" onclick="location.href='getheroes.html'" type="button" class="btn btn-primary">Hősök</button>
+                        <button  style="width:150px;" onclick="location.href='getempires.html'" type="button" class="btn btn-primary">Birodalmak</button>
+                    </div>
+            </section>
+
+            <!-- Lábrész -->
+            <section id="footr"  class="d-flex f-grow-0 justify-content-center text-light bg-dark">
+                    <p>© OE-HTML5 - 2018-<span id="year"></span>/II.
+                        <a class="btn text-light " href="asz.html">ÁSZF</a>
+                        <a class="btn  text-light" href="av.html" >Adatvédelem</a>
+                    </p>
+            </section>
+       </div>
+
+       <script>
+			var d = new Date();
+			var n = d.getFullYear();
+			document.getElementById("year").innerHTML = n;
+        </script>      
+    </body>
+</html>
